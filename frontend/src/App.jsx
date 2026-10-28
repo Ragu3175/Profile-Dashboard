@@ -5,7 +5,6 @@ import { ProtectedRoute, PublicRoute } from './components/ProtectedRoute.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Dashboard from './pages/Dashboard.jsx';
-import Profile from './pages/Profile.jsx';
 
 function App() {
   return (
@@ -21,13 +20,13 @@ function App() {
                 <Route path="/register" element={<Register />} />
               </Route>
 
-              {/* Protected routes: redirect to /login if unauthenticated */}
+              {/* Protected single-page professional dashboard */}
               <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/profile" element={<Profile />} />
+                <Route path="/profile" element={<Navigate to="/dashboard" replace />} />
               </Route>
 
-              {/* Default redirect */}
+              {/* Default redirects */}
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>

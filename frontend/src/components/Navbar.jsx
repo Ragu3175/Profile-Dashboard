@@ -1,10 +1,9 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 
 export const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -16,8 +15,6 @@ export const Navbar = () => {
     }
   };
 
-  const isActive = (path) => location.pathname === path;
-
   return (
     <header className="navbar-container">
       <div className="navbar-content">
@@ -28,48 +25,42 @@ export const Navbar = () => {
 
         <nav className="navbar-links">
           {isAuthenticated ? (
-            <>
-              <Link
-                to="/dashboard"
-                className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}
-              >
-                Dashboard
-              </Link>
-              <Link
-                to="/profile"
-                className={`nav-link ${isActive('/profile') ? 'active' : ''}`}
-              >
-                Profile
-              </Link>
-              <div className="nav-user-meta">
-                <span className="user-greeting">
-                  {user?.name || 'User'}
+            <div className="nav-user-meta">
+              <span className="user-greeting">
+                <span className="greeting-avatar">
+                  {user?.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt={user?.name || 'User'}
+                      className="nav-avatar-img"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <span>{user?.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>
+                  )}
                 </span>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="btn btn-outline-danger btn-sm"
-                  id="logout-button"
-                >
-                  Logout
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className={`nav-link ${isActive('/login') ? 'active' : ''}`}
+                <span className="greeting-name">{user?.name || 'User'}</span>
+              </span>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="btn btn-outline-danger btn-sm"
+                id="logout-button"
               >
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <div className="nav-guest-actions">
+              <Link to="/login" className="nav-link">
                 Sign In
               </Link>
-              <Link
-                to="/register"
-                className={`btn btn-primary btn-sm ${isActive('/register') ? 'active' : ''}`}
-              >
-                Register
+              <Link to="/register" className="btn btn-primary btn-sm">
+                Create Account
               </Link>
-            </>
+            </div>
           )}
         </nav>
       </div>
